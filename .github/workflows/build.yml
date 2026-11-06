@@ -1,0 +1,688 @@
+name: build
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Crear proyecto
+        run: |
+          mkdir -p Sources Resources
+          cat > Resources/index.html <<'PANEL_EOF'
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="theme-color" content="#000000" />
+<title>BENITE</title>
+<script>
+try{ localStorage.setItem('_t','1'); localStorage.removeItem('_t'); }
+catch(e){
+  var _m={}; window.localStorage={
+    getItem:function(k){return _m[k]||null}, setItem:function(k,v){_m[k]=String(v)},
+    removeItem:function(k){delete _m[k]}, clear:function(){_m={}}
+  };
+}
+</script>
+<style>
+:root{ --dim:#7d7d7d; --line:#1f1f1f; }
+*{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body{ margin:0; padding:0; background:#000; color:#fff;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+body{ -webkit-text-size-adjust:100%; }
+button{ font-family:inherit; }
+#gate{ min-height:100vh; display:flex; flex-direction:column; justify-content:center;
+  align-items:center; padding:24px; gap:12px; }
+.logo{ font-size:42px; font-weight:800; letter-spacing:14px; text-indent:14px; }
+.sub{ font-size:10px; letter-spacing:5px; color:var(--dim); margin-top:-6px; }
+#keyIn{ width:100%; max-width:340px; margin-top:24px; background:#000; color:#fff;
+  border:1px solid #333; padding:16px; font-size:16px; text-align:center;
+  letter-spacing:2px; border-radius:2px; outline:none; }
+#keyIn:focus{ border-color:#fff; }
+#loginBtn{ width:100%; max-width:340px; background:#fff; color:#000; border:0; padding:16px;
+  font-size:13px; font-weight:700; letter-spacing:4px; border-radius:2px; }
+#loginBtn:active{ background:#cfcfcf; }
+.msg{ font-size:11px; letter-spacing:2px; min-height:14px; text-align:center; }
+.hint{ font-size:10px; letter-spacing:2px; color:#555; margin-top:4px; }
+#app{ display:none; }
+header{ position:sticky; top:0; z-index:9; background:#000; border-bottom:1px solid var(--line);
+  padding:14px 16px; padding-top:calc(14px + env(safe-area-inset-top));
+  display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.brand{ font-size:14px; font-weight:800; letter-spacing:6px; }
+.chip{ font-size:9px; letter-spacing:1px; border:1px solid #2a2a2a; padding:5px 7px;
+  color:var(--dim); border-radius:2px; max-width:140px; overflow:hidden;
+  text-overflow:ellipsis; white-space:nowrap; }
+.out2{ font-size:9px; letter-spacing:2px; color:#888; border:1px solid #2a2a2a;
+  padding:6px 8px; border-radius:2px; background:#000; }
+nav{ display:flex; border-bottom:1px solid var(--line); position:sticky; top:0;
+  background:#000; z-index:8; overflow-x:auto; }
+nav button{ flex:1 0 auto; background:transparent; border:0; color:var(--dim);
+  padding:14px 12px; font-size:10px; letter-spacing:2px;
+  border-bottom:2px solid transparent; }
+nav button.on{ color:#fff; border-bottom-color:#fff; }
+main{ padding:8px 16px 70px; }
+section{ display:none; }
+section.on{ display:block; }
+.grp{ font-size:9px; letter-spacing:3px; color:#555; margin:20px 0 6px; }
+.row{ display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:13px 0; border-bottom:1px solid #121212; }
+.row.col{ display:block; }
+.lbl{ font-size:12px; }
+.lblrow{ display:flex; justify-content:space-between; margin-bottom:10px; }
+.val{ font-size:11px; color:var(--dim); }
+.sw{ position:relative; width:44px; height:24px; flex:0 0 auto; }
+.sw input{ position:absolute; opacity:0; width:100%; height:100%; margin:0; }
+.sw i{ position:absolute; inset:0; border:1px solid #333; border-radius:20px; transition:.15s; }
+.sw i::after{ content:""; position:absolute; top:3px; left:3px; width:16px; height:16px;
+  background:#4a4a4a; border-radius:50%; transition:.15s; }
+.sw input:checked + i{ border-color:#fff; background:#fff; }
+.sw input:checked + i::after{ left:23px; background:#000; }
+input[type=range]{ -webkit-appearance:none; width:100%; height:2px;
+  background:#2a2a2a; outline:none; }
+input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:18px; height:18px;
+  background:#fff; border-radius:50%; }
+.btn{ background:#fff; color:#000; border:0; padding:15px; font-size:11px;
+  font-weight:700; letter-spacing:3px; width:100%; border-radius:2px; margin-top:10px; }
+.btn.ghost{ background:transparent; color:#fff; border:1px solid #333; }
+.btn:active{ opacity:.7; }
+.row2{ display:flex; gap:8px; }
+.row2 > *{ flex:1; }
+select,.inp{ width:100%; background:#000; color:#fff; border:1px solid #333;
+  padding:13px; font-size:16px; border-radius:2px; font-family:inherit; }
+.out{ background:#060606; border:1px solid #1c1c1c; padding:12px; font-size:11px;
+  word-break:break-all; color:#bbb; margin-top:10px; border-radius:2px; }
+.keyrow{ border:1px solid #161616; padding:10px; margin-bottom:8px; border-radius:2px; }
+.keyrow .k{ font-size:11px; letter-spacing:1px; word-break:break-all; }
+.keyrow .meta{ font-size:9px; color:#666; margin-top:5px; letter-spacing:1px; }
+.keyrow .acts{ display:flex; gap:6px; margin-top:8px; }
+.keyrow .acts button{ flex:1; font-size:9px; letter-spacing:1px; padding:9px;
+  background:#111; color:#ddd; border:1px solid #262626; border-radius:2px; }
+.bar{ height:6px; background:#141414; border-radius:4px; overflow:hidden; }
+.bar i{ display:block; height:100%; width:0; background:#fff; transition:.2s; }
+.foot{ font-size:9px; letter-spacing:1px; color:#3d3d3d; text-align:center; padding:26px 0 10px; }
+.warn{ font-size:10px; color:#8a8a8a; line-height:1.7; }
+</style>
+</head>
+<body>
+<div id="gate">
+  <div class="logo">BENITE</div>
+  <div class="sub">FREE FIRE PANEL</div>
+  <input id="keyIn" placeholder="BENITE-XXXX-XXXX-XXXX" autocapitalize="characters"
+    autocomplete="off" spellcheck="false" />
+  <button id="loginBtn">ENTRAR</button>
+  <div class="msg" id="loginMsg"></div>
+  <div class="hint">PEGA TU KEY PARA ACCEDER</div>
+</div>
+<div id="app">
+  <header>
+    <div class="brand">BENITE</div>
+    <div class="chip" id="who">—</div>
+    <button class="out2" id="logout">SALIR</button>
+  </header>
+  <nav>
+    <button data-t="combate" class="on">COMBATE</button>
+    <button data-t="visual">VISUAL</button>
+    <button data-t="misc">MISC</button>
+    <button data-t="bypass">BYPASS</button>
+    <button data-t="config">CONFIG</button>
+    <button data-t="keys">KEYS</button>
+  </nav>
+  <main>
+    <section id="combate" class="on">
+      <div class="grp">PUNTERIA</div>
+      <div class="row"><span class="lbl">Aimbot</span>
+        <label class="sw"><input type="checkbox" data-k="aimbot"><i></i></label></div>
+      <div class="row"><span class="lbl">Aim Assist</span>
+        <label class="sw"><input type="checkbox" data-k="aimassist" checked><i></i></label></div>
+      <div class="row"><span class="lbl">Silent Aim</span>
+        <label class="sw"><input type="checkbox" data-k="silent"><i></i></label></div>
+      <div class="row col"><div class="lblrow"><span class="lbl">Aim FOV</span>
+        <span class="val" data-v="fov">120</span></div>
+        <input type="range" min="0" max="360" value="120" data-k="fov"></div>
+      <div class="row col"><div class="lblrow"><span class="lbl">Suavizado</span>
+        <span class="val" data-v="smooth">6</span></div>
+        <input type="range" min="1" max="20" value="6" data-k="smooth"></div>
+      <div class="row col"><div class="lblrow"><span class="lbl">Headshot %</span>
+        <span class="val" data-v="hs">70</span></div>
+        <input type="range" min="0" max="100" value="70" data-k="hs"></div>
+      <div class="grp">DISPARO</div>
+      <div class="row"><span class="lbl">Magic Bullet</span>
+        <label class="sw"><input type="checkbox" data-k="magic"><i></i></label></div>
+      <div class="row"><span class="lbl">No Recoil</span>
+        <label class="sw"><input type="checkbox" data-k="norecoil" checked><i></i></label></div>
+      <div class="row"><span class="lbl">No Spread</span>
+        <label class="sw"><input type="checkbox" data-k="nospread"><i></i></label></div>
+      <div class="row"><span class="lbl">Fast Fire</span>
+        <label class="sw"><input type="checkbox" data-k="fastfire"><i></i></label></div>
+      <div class="row"><span class="lbl">Recarga Instantanea</span>
+        <label class="sw"><input type="checkbox" data-k="reload"><i></i></label></div>
+      <div class="row col"><div class="lblrow"><span class="lbl">Multiplicador Dano</span>
+        <span class="val" data-v="dmg">2</span></div>
+        <input type="range" min="1" max="10" value="2" data-k="dmg"></div>
+    </section>
+    <section id="visual">
+      <div class="grp">ESP</div>
+      <div class="row"><span class="lbl">ESP Maestro</span>
+        <label class="sw"><input type="checkbox" data-k="esp" checked><i></i></label></div>
+      <div class="row"><span class="lbl">Caja</span>
+        <label class="sw"><input type="checkbox" data-k="box" checked><i></i></label></div>
+      <div class="row"><span class="lbl">Linea</span>
+        <label class="sw"><input type="checkbox" data-k="line"><i></i></label></div>
+      <div class="row"><span class="lbl">Esqueleto</span>
+        <label class="sw"><input type="checkbox" data-k="skel"><i></i></label></div>
+      <div class="row"><span class="lbl">Nombre</span>
+        <label class="sw"><input type="checkbox" data-k="name" checked><i></i></label></div>
+      <div class="row"><span class="lbl">Barra de Vida</span>
+        <label class="sw"><input type="checkbox" data-k="hp" checked><i></i></label></div>
+      <div class="row"><span class="lbl">Distancia</span>
+        <label class="sw"><input type="checkbox" data-k="dist"><i></i></label></div>
+      <div class="row"><span class="lbl">Arma</span>
+        <label class="sw"><input type="checkbox" data-k="weapon"><i></i></label></div>
+      <div class="row"><span class="lbl">Marca de Cabeza</span>
+        <label class="sw"><input type="checkbox" data-k="head"><i></i></label></div>
+      <div class="grp">ENTORNO</div>
+      <div class="row"><span class="lbl">Radar</span>
+        <label class="sw"><input type="checkbox" data-k="radar"><i></i></label></div>
+      <div class="row"><span class="lbl">Circulo FOV</span>
+        <label class="sw"><input type="checkbox" data-k="fovcircle"><i></i></label></div>
+      <div class="row col"><div class="lblrow"><span class="lbl">Distancia Max ESP</span>
+        <span class="val" data-v="maxdist">200</span></div>
+        <input type="range" min="50" max="500" value="200" data-k="maxdist"></div>
+    </section>
+    <section id="misc">
+      <div class="grp">MOVIMIENTO</div>
+      <div class="row"><span class="lbl">Antena</span>
+        <label class="sw"><input type="checkbox" data-k="antenna"><i></i></label></div>
+      <div class="row col"><div class="lblrow"><span class="lbl">Velocidad</span>
+        <span class="val" data-v="speed">1</span></div>
+        <input type="range" min="1" max="10" value="1" data-k="speed"></div>
+      <div class="row"><span class="lbl">Salto Elevado</span>
+        <label class="sw"><input type="checkbox" data-k="jump"><i></i></label></div>
+      <div class="grp">RENDIMIENTO</div>
+      <div class="row"><span class="lbl">Sin Niebla</span>
+        <label class="sw"><input type="checkbox" data-k="nofog"><i></i></label></div>
+      <div class="row"><span class="lbl">High FPS</span>
+        <label class="sw"><input type="checkbox" data-k="fps"><i></i></label></div>
+      <div class="row"><span class="lbl">Vista Dron</span>
+        <label class="sw"><input type="checkbox" data-k="drone"><i></i></label></div>
+    </section>
+    <section id="bypass">
+      <div class="grp">PROTECCION</div>
+      <div class="row"><span class="lbl">Modo Seguro</span>
+        <label class="sw"><input type="checkbox" data-k="safemode" id="safeSw"><i></i></label></div>
+      <p class="warn">Apaga solo lo que se banea: magic bullet, silent aim, antena, salto,
+        fast fire. Deja dano en 2 y velocidad en 1.</p>
+      <div class="row"><span class="lbl">Humanizador de aim</span>
+        <label class="sw"><input type="checkbox" data-k="human" checked><i></i></label></div>
+      <p class="warn">Al aplicar, el suavizado y el headshot salen con una variacion chica
+        al azar. Asi no tienes un patron fijo que se note.</p>
+      <div class="row"><span class="lbl">Variacion aleatoria</span>
+        <label class="sw"><input type="checkbox" data-k="rand"><i></i></label></div>
+      <p class="warn">Mueve FOV y sensibilidad un poco cada vez que aplicas.</p>
+      <div class="row"><span class="lbl">Anti-Ban estricto</span>
+        <label class="sw"><input type="checkbox" data-k="antiban" checked><i></i></label></div>
+      <div class="grp">NIVEL DE RIESGO</div>
+      <div class="row col">
+        <div class="lblrow"><span class="lbl">Tu configuracion</span>
+        <span class="val" id="riskTxt">—</span></div>
+        <div class="bar"><i id="riskBar"></i></div>
+      </div>
+      <p class="warn" id="riskHint">Bajo = no te banean. Alto = se nota mucho.</p>
+      <div class="grp">JUEGO</div>
+      <button class="btn ghost" id="openFF">ABRIR FREE FIRE</button>
+      <div class="msg" id="ffMsg"></div>
+    </section>
+    <section id="config">
+      <div class="grp">PRESETS</div>
+      <div class="row2">
+        <button class="btn ghost" data-preset="legit">LEGIT</button>
+        <button class="btn ghost" data-preset="semi">SEMI</button>
+        <button class="btn ghost" data-preset="rage">RAGE</button>
+      </div>
+      <div class="grp">SINCRONIZAR</div>
+      <button class="btn" id="applyBtn">APLICAR CONFIG</button>
+      <div class="out" id="applyOut">—</div>
+      <div class="row2" style="margin-top:10px">
+        <button class="btn ghost" id="copyBtn">COPIAR</button>
+        <button class="btn ghost" id="importBtn">IMPORTAR</button>
+      </div>
+      <button class="btn ghost" id="resetBtn" style="margin-top:10px">RESTABLECER</button>
+      <div class="foot">BENITE v1.1</div>
+    </section>
+    <section id="keys">
+      <div id="keysLocked">
+        <div class="grp">ACCESO ADMIN</div>
+        <p class="warn">Entra con la key maestra para generar y administrar keys.</p>
+        <input class="inp" id="admPw" placeholder="KEY MAESTRA" autocapitalize="characters"
+          autocomplete="off" spellcheck="false" />
+        <button class="btn" id="admGo">DESBLOQUEAR</button>
+        <div class="msg" id="admMsg"></div>
+      </div>
+      <div id="keysPanel" style="display:none">
+        <div class="grp">GENERAR KEYS</div>
+        <div class="row col">
+          <div class="lblrow"><span class="lbl">Duracion</span></div>
+          <select id="plan">
+            <option value="1d">1 DIA</option>
+            <option value="3d">3 DIAS</option>
+            <option value="7d" selected>7 DIAS</option>
+            <option value="30d">30 DIAS</option>
+            <option value="perm">PERMANENTE</option>
+          </select>
+        </div>
+        <div class="row col">
+          <div class="lblrow"><span class="lbl">Cantidad</span></div>
+          <input class="inp" id="qty" type="number" value="1" min="1" max="50" />
+        </div>
+        <div class="row"><span class="lbl">Bloqueo por dispositivo</span>
+          <label class="sw"><input type="checkbox" id="lockSw" checked><i></i></label></div>
+        <button class="btn" id="genBtn">CREAR KEYS</button>
+        <div class="grp">MIS KEYS <span id="cnt" style="color:#444"></span></div>
+        <div id="keyList"></div>
+        <button class="btn ghost" id="wipeBtn">BORRAR TODAS</button>
+        <div class="grp">SEGURIDAD</div>
+        <input class="inp" id="newPw" placeholder="NUEVA KEY MAESTRA" autocapitalize="characters" />
+        <button class="btn ghost" id="pwBtn">CAMBIAR</button>
+        <div class="foot">Dispositivo: <span id="dev"></span></div>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+var $ = function(s){ return document.querySelector(s); };
+var $$ = function(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); };
+var LS = { keys:'benite_keys_v1', adm:'benite_adm_v1', sess:'benite_sess_v1',
+  cfg:'benite_cfg_v1', hwid:'benite_hwid_v1', lock:'benite_lock_v1' };
+var DEFAULT_ADM = 'BENITE-ADMIN';
+var admPw = function(){ return localStorage.getItem(LS.adm) || DEFAULT_ADM; };
+function rnd(n){ return Math.random().toString(36).slice(2, 2 + n); }
+function deviceId(){
+  var d = localStorage.getItem(LS.hwid);
+  if(!d){ d = 'DEV-' + rnd(8).toUpperCase(); localStorage.setItem(LS.hwid, d); }
+  return d;
+}
+function getKeys(){ try { return JSON.parse(localStorage.getItem(LS.keys)) || []; } catch(e){ return []; } }
+function setKeys(a){ localStorage.setItem(LS.keys, JSON.stringify(a)); }
+function newKey(){
+  var abc = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  function blk(){ var s=''; for(var i=0;i<4;i++){ s += abc[Math.floor(Math.random()*abc.length)]; } return s; }
+  return 'BENITE-' + blk() + '-' + blk() + '-' + blk();
+}
+var PLANS = { '1d':['1 DIA',1], '3d':['3 DIAS',3], '7d':['7 DIAS',7], '30d':['30 DIAS',30], 'perm':['PERMANENTE',null] };
+function fmt(ts){ return ts ? new Date(ts).toLocaleDateString('es-MX') : 'PERMANENTE'; }
+
+function loginMsg(t){ $('#loginMsg').textContent = t; }
+function validate(key){
+  var all = getKeys(), k = null;
+  for(var i=0;i<all.length;i++){ if(all[i].key === key){ k = all[i]; break; } }
+  if(!k) return { ok:false, msg:'KEY INVALIDA' };
+  if(k.revoked) return { ok:false, msg:'KEY REVOCADA' };
+  if(k.expires && Date.now() > k.expires) return { ok:false, msg:'KEY EXPIRADA' };
+  if(k.hwid && k.hwid !== deviceId() && localStorage.getItem(LS.lock) !== '0')
+    return { ok:false, msg:'KEY EN OTRO DISPOSITIVO' };
+  return { ok:true, k:k };
+}
+function openSession(tag, isAdmin){
+  localStorage.setItem(LS.sess, JSON.stringify({ tag:tag, admin:!!isAdmin }));
+  $('#gate').style.display = 'none';
+  $('#app').style.display = 'block';
+  $('#who').textContent = isAdmin ? 'ADMIN' : tag;
+  if(isAdmin){
+    $('#keysLocked').style.display = 'none';
+    $('#keysPanel').style.display = 'block';
+    renderKeys();
+  }
+  $('#dev').textContent = deviceId();
+  loadCfg();
+  updateRisk();
+}
+$('#loginBtn').onclick = function(){
+  var raw = $('#keyIn').value.trim().toUpperCase();
+  if(!raw){ return loginMsg('INGRESA UNA KEY'); }
+  if(raw === admPw().toUpperCase()){ return openSession('ADMIN', true); }
+  var r = validate(raw);
+  if(!r.ok){ return loginMsg(r.msg); }
+  if(!r.k.hwid){ r.k.hwid = deviceId(); }
+  r.k.uses = (r.k.uses || 0) + 1;
+  var all = getKeys();
+  for(var i=0;i<all.length;i++){ if(all[i].key === raw){ all[i] = r.k; } }
+  setKeys(all);
+  openSession(raw, false);
+};
+$('#keyIn').addEventListener('keydown', function(e){ if(e.key === 'Enter'){ $('#loginBtn').click(); } });
+$('#logout').onclick = function(){ localStorage.removeItem(LS.sess); location.reload(); };
+
+$$('nav button').forEach(function(b){
+  b.onclick = function(){
+    $$('nav button').forEach(function(x){ x.classList.remove('on'); });
+    $$('section').forEach(function(x){ x.classList.remove('on'); });
+    b.classList.add('on');
+    $('#' + b.dataset.t).classList.add('on');
+    if(b.dataset.t === 'bypass'){ updateRisk(); }
+  };
+});
+
+function buildCfg(){
+  var o = {};
+  $$('input[data-k]').forEach(function(el){
+    o[el.dataset.k] = el.type === 'checkbox' ? (el.checked ? 1 : 0) : el.value;
+  });
+  return o;
+}
+function applyCfg(o){
+  $$('input[data-k]').forEach(function(el){
+    var k = el.dataset.k;
+    if(!(k in o)) return;
+    if(el.type === 'checkbox'){ el.checked = !!Number(o[k]); }
+    else { el.value = o[k]; }
+    var v = document.querySelector('[data-v="' + k + '"]');
+    if(v){ v.textContent = el.value; }
+  });
+  updateRisk();
+}
+function saveCfg(){ localStorage.setItem(LS.cfg, JSON.stringify(buildCfg())); }
+function loadCfg(){
+  try {
+    var c = JSON.parse(localStorage.getItem(LS.cfg));
+    if(c){ applyCfg(c); }
+  } catch(e){}
+}
+$$('input[data-k]').forEach(function(el){
+  el.addEventListener('input', function(){
+    if(el.type === 'range'){
+      var v = document.querySelector('[data-v="' + el.dataset.k + '"]');
+      if(v){ v.textContent = el.value; }
+    }
+    if(el.dataset.k === 'safemode'){ safeMode(el.checked); }
+    saveCfg();
+    updateRisk();
+  });
+});
+
+var W = { aimbot:2, silent:3, magic:4, fastfire:2, nospread:1, norecoil:1,
+  reload:1, antenna:3, jump:2, nofog:1, esp:1, skel:1, line:1, radar:1 };
+function updateRisk(){
+  var c = buildCfg(), s = 0, k;
+  for(k in W){ if(Number(c[k])){ s += W[k]; } }
+  s += (Number(c.dmg || 1) - 1) * 2;
+  s += (Number(c.speed || 1) - 1) * 2;
+  if(Number(c.hs) > 85){ s += 2; }
+  if(Number(c.fov) > 250){ s += 2; }
+  var lvl = s <= 4 ? 'BAJO' : (s <= 10 ? 'MEDIO' : 'ALTO');
+  $('#riskTxt').textContent = lvl + ' (' + s + ')';
+  $('#riskBar').style.width = Math.min(100, s * 5) + '%';
+  var hint = 'Bajo = no te banean. Alto = se nota mucho.';
+  if(lvl === 'MEDIO'){ hint = 'Medio. Aguanta partidas normales, evita ranked alto.'; }
+  if(lvl === 'ALTO'){ hint = 'Alto. Se nota. Usalo en cuentas secundarias.'; }
+  $('#riskHint').textContent = hint;
+}
+function safeMode(on){
+  if(!on){ return; }
+  var off = ['magic','silent','antenna','jump','fastfire','nospread','drone','skel'];
+  off.forEach(function(k){
+    var el = document.querySelector('input[data-k="' + k + '"]');
+    if(el){ el.checked = false; }
+  });
+  var set = { dmg:'2', speed:'1', hs:'70', fov:'100', smooth:'8' };
+  for(var k in set){
+    var el = document.querySelector('input[data-k="' + k + '"]');
+    if(el){ el.value = set[k]; var v = document.querySelector('[data-v="' + k + '"]'); if(v){ v.textContent = set[k]; } }
+  }
+}
+
+$('#applyBtn').onclick = function(){
+  var o = buildCfg();
+  if(Number(o.human)){
+    o.smooth = Math.max(1, Number(o.smooth) + Math.floor(Math.random() * 3) - 1);
+    o.hs = Math.max(0, Math.min(100, Number(o.hs) + Math.floor(Math.random() * 7) - 3));
+  }
+  if(Number(o.rand)){
+    o.fov = Math.max(0, Math.min(360, Number(o.fov) + Math.floor(Math.random() * 21) - 10));
+  }
+  applyCfg(o); saveCfg();
+  var code = 'BENITE:v1:' + btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+  $('#applyOut').textContent = code;
+};
+$('#copyBtn').onclick = function(){
+  var t = $('#applyOut').textContent;
+  if(t === '-'){ return; }
+  navigator.clipboard.writeText(t).catch(function(){});
+  $('#copyBtn').textContent = 'COPIADO';
+  setTimeout(function(){ $('#copyBtn').textContent = 'COPIAR'; }, 1200);
+};
+$('#importBtn').onclick = function(){
+  var t = prompt('Pega el codigo BENITE:');
+  if(!t || t.indexOf('BENITE:v1:') !== 0){ return; }
+  try {
+    var json = decodeURIComponent(escape(atob(t.slice(10))));
+    applyCfg(JSON.parse(json)); saveCfg();
+  } catch(e){ alert('Codigo invalido'); }
+};
+$('#resetBtn').onclick = function(){
+  if(!confirm('Restablecer todo?')){ return; }
+  localStorage.removeItem(LS.cfg);
+  location.reload();
+};
+$('#openFF').onclick = function(){
+  $('#ffMsg').textContent = 'ABRIENDO...';
+  try { window.location.href = 'freefiremax://'; }
+  catch(e){ window.location.href = 'freefire://'; }
+  setTimeout(function(){ $('#ffMsg').textContent = 'Si no abrio, entra manual'; }, 1500);
+};
+$$('[data-preset]').forEach(function(b){
+  b.onclick = function(){
+    var p = b.dataset.preset;
+    var base = { aimbot:1, aimassist:1, silent:0, fov:120, smooth:6, hs:70,
+      magic:0, norecoil:1, nospread:0, fastfire:0, reload:0, dmg:2,
+      esp:1, box:1, line:0, skel:0, name:1, hp:1, dist:0, weapon:0,
+      head:0, radar:0, fovcircle:0, maxdist:200,
+      antenna:0, speed:1, jump:0, nofog:0, fps:0, drone:0,
+      antiban:1, safemode:0, human:1, rand:0 };
+    if(p === 'legit'){ base.fov = 80; base.smooth = 12; base.hs = 45; base.skel = 1; }
+    if(p === 'semi'){ base.fov = 150; base.smooth = 5; base.hs = 80; base.magic = 1; base.fastfire = 1; base.line = 1; base.head = 1; }
+    if(p === 'rage'){ base.silent = 1; base.fov = 300; base.smooth = 1; base.hs = 100; base.magic = 1;
+      base.nospread = 1; base.fastfire = 1; base.reload = 1; base.dmg = 6; base.radar = 1;
+      base.maxdist = 500; base.antenna = 1; base.speed = 3; }
+    applyCfg(base); saveCfg();
+  };
+});
+
+function renderKeys(){
+  var all = getKeys();
+  $('#cnt').textContent = '(' + all.length + ')';
+  var box = $('#keyList');
+  box.innerHTML = '';
+  if(!all.length){ box.innerHTML = '<p class="warn">Sin keys creadas.</p>'; return; }
+  all.slice().reverse().forEach(function(k){
+    var div = document.createElement('div');
+    div.className = 'keyrow';
+    div.innerHTML = '<div class="k">' + k.key + '</div>' +
+      '<div class="meta">' + (PLANS[k.plan] ? PLANS[k.plan][0] : k.plan) +
+      ' - VENCE ' + fmt(k.expires) + ' - USOS ' + (k.uses || 0) +
+      (k.revoked ? ' - REVOCADA' : '') + (k.hwid ? ' - VINCULADA' : '') + '</div>' +
+      '<div class="acts"><button data-c="' + k.key + '">COPIAR</button>' +
+      '<button data-r="' + k.key + '">' + (k.revoked ? 'ACTIVAR' : 'REVOCAR') + '</button>' +
+      '<button data-d="' + k.key + '">BORRAR</button></div>';
+    box.appendChild(div);
+  });
+  box.querySelectorAll('[data-c]').forEach(function(b){
+    b.onclick = function(){
+      navigator.clipboard.writeText(b.dataset.c).catch(function(){});
+      b.textContent = 'OK';
+      setTimeout(function(){ b.textContent = 'COPIAR'; }, 1000);
+    };
+  });
+  box.querySelectorAll('[data-r]').forEach(function(b){
+    b.onclick = function(){
+      var a = getKeys();
+      for(var i=0;i<a.length;i++){ if(a[i].key === b.dataset.r){ a[i].revoked = !a[i].revoked; } }
+      setKeys(a); renderKeys();
+    };
+  });
+  box.querySelectorAll('[data-d]').forEach(function(b){
+    b.onclick = function(){
+      setKeys(getKeys().filter(function(x){ return x.key !== b.dataset.d; }));
+      renderKeys();
+    };
+  });
+}
+$('#genBtn').onclick = function(){
+  var plan = $('#plan').value;
+  var qty = Math.max(1, Math.min(50, parseInt($('#qty').value) || 1));
+  var days = PLANS[plan][1];
+  var all = getKeys(), out = [];
+  for(var i=0;i<qty;i++){
+    var key = newKey();
+    all.push({ key:key, plan:plan, created:Date.now(),
+      expires: days === null ? null : Date.now() + days * 864e5,
+      revoked:false, hwid:null, uses:0 });
+    out.push(key);
+  }
+  setKeys(all); renderKeys();
+  navigator.clipboard.writeText(out.join('\n')).catch(function(){});
+  alert(qty + ' key(s) creada(s):\n\n' + out.join('\n'));
+};
+$('#lockSw').onchange = function(e){ localStorage.setItem(LS.lock, e.target.checked ? '1' : '0'); };
+$('#wipeBtn').onclick = function(){ if(confirm('Borrar todas las keys?')){ setKeys([]); renderKeys(); } };
+$('#admGo').onclick = function(){
+  if($('#admPw').value.trim().toUpperCase() === admPw().toUpperCase()){
+    localStorage.setItem(LS.sess, JSON.stringify({ tag:'ADMIN', admin:true }));
+    $('#keysLocked').style.display = 'none';
+    $('#keysPanel').style.display = 'block';
+    $('#who').textContent = 'ADMIN';
+    renderKeys();
+  } else { $('#admMsg').textContent = 'KEY MAESTRA INCORRECTA'; }
+};
+$('#pwBtn').onclick = function(){
+  var v = $('#newPw').value.trim().toUpperCase();
+  if(v.length < 6){ return alert('Minimo 6 caracteres'); }
+  localStorage.setItem(LS.adm, v);
+  alert('Key maestra actualizada: ' + v);
+};
+(function init(){
+  if(!localStorage.getItem(LS.lock)){ localStorage.setItem(LS.lock, '1'); }
+  var s = localStorage.getItem(LS.sess);
+  if(s){
+    try {
+      var o = JSON.parse(s);
+      if(o.admin){ openSession('ADMIN', true); }
+      else { var r = validate(o.tag); if(r.ok){ openSession(o.tag, false); } }
+    } catch(e){}
+  }
+  $$('input[data-k]').forEach(function(el){
+    if(el.type === 'range'){
+      var v = document.querySelector('[data-v="' + el.dataset.k + '"]');
+      if(v){ v.textContent = el.value; }
+    }
+  });
+  updateRisk();
+})();
+</script>
+</body>
+</html>
+PANEL_EOF
+          cat > Sources/App.swift <<'SWIFT_EOF'
+import SwiftUI
+import WebKit
+
+@main
+struct BeniteApp: App {
+    var body: some Scene {
+        WindowGroup {
+            PanelView()
+                .ignoresSafeArea()
+                .preferredColorScheme(.dark)
+        }
+    }
+}
+
+struct PanelView: UIViewRepresentable {
+    func makeUIView(context: Context) -> WKWebView {
+        let cfg = WKWebViewConfiguration()
+        cfg.allowsInlineMediaPlayback = true
+        cfg.websiteDataStore = .default()
+
+        let wv = WKWebView(frame: .zero, configuration: cfg)
+        wv.isOpaque = false
+        wv.backgroundColor = .black
+        wv.scrollView.backgroundColor = .black
+        wv.scrollView.bounces = false
+        wv.allowsBackForwardNavigationGestures = false
+
+        if let url = Bundle.main.url(forResource: "index", withExtension: "html") {
+            wv.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
+        }
+        return wv
+    }
+
+    func updateUIView(_ uiView: WKWebView, context: Context) {}
+}
+SWIFT_EOF
+          cat > project.yml <<'YML_EOF'
+name: BENITE
+options:
+  bundleIdPrefix: com.benite
+  deploymentTarget:
+    iOS: "15.0"
+targets:
+  BENITE:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+      - path: Resources
+        buildPhase: resources
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: BENITE
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIStatusBarStyle: UIStatusBarStyleLightContent
+        UIViewControllerBasedStatusBarAppearance: false
+        UIUserInterfaceStyle: Dark
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.benite.panel
+        MARKETING_VERSION: "1.1"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGN_IDENTITY: ""
+        CODE_SIGNING_REQUIRED: "NO"
+        CODE_SIGNING_ALLOWED: "NO"
+YML_EOF
+
+      - name: Generar
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      - name: Compilar
+        run: |
+          xcodebuild -project BENITE.xcodeproj -scheme BENITE -sdk iphoneos \
+            -configuration Release -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Empaquetar
+        run: |
+          mkdir -p out/Payload
+          cp -R build/Build/Products/Release-iphoneos/BENITE.app out/Payload/
+          cd out && zip -r BENITE.ipa Payload
+
+      - name: Subir
+        uses: actions/upload-artifact@v4
+        with:
+          name: BENITE-ipa
+          path: out/BENITE.ipa

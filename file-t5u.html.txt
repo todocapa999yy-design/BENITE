@@ -1,0 +1,179 @@
+
+
+<div id="gate">
+  <div class="logo">BENITE</div>
+  <div class="sub">FREE FIRE PANEL</div>
+  <input id="keyIn" placeholder="BENITE-XXXX-XXXX-XXXX" autocapitalize="characters" autocomplete="off" spellcheck="false">
+  <button id="loginBtn">ENTRAR</button>
+  <div class="msg" id="loginMsg"></div>
+  <div class="hint">PEGA TU KEY PARA ACCEDER</div>
+</div>
+
+<div id="app">
+  <header>
+    <div class="brand">BENITE</div>
+    <div class="chip" id="who">—</div>
+    <button class="out2" id="logout">SALIR</button>
+  </header>
+
+  <nav>
+    <button data-t="combate" class="on">COMBATE</button>
+    <button data-t="visual">VISUAL</button>
+    <button data-t="misc">MISC</button>
+    <button data-t="config">CONFIG</button>
+    <button data-t="keys">KEYS</button>
+  </nav>
+
+  <main>
+    <section id="combate" class="on">
+      <div class="grp">PUNTERÍA</div>
+      <div class="row"><span class="lbl">Aimbot</span>
+        <label class="sw"><input type="checkbox" data-k="aimbot"><i></i></label></div>
+      <div class="row"><span class="lbl">Aim Assist</span>
+        <label class="sw"><input type="checkbox" data-k="aimassist" checked=""><i></i></label></div>
+      <div class="row"><span class="lbl">Silent Aim</span>
+        <label class="sw"><input type="checkbox" data-k="silent"><i></i></label></div>
+      <div class="row col"><div class="lblrow"><span class="lbl">Aim FOV</span>
+        <span class="val" data-v="fov">120</span></div>
+        <input type="range" min="0" max="360" value="120" data-k="fov"></div>
+      <div class="row col"><div class="lblrow"><span class="lbl">Suavizado</span>
+        <span class="val" data-v="smooth">6</span></div>
+        <input type="range" min="1" max="20" value="6" data-k="smooth"></div>
+      <div class="row col"><div class="lblrow"><span class="lbl">Headshot %</span>
+        <span class="val" data-v="hs">70</span></div>
+        <input type="range" min="0" max="100" value="70" data-k="hs"></div>
+
+      <div class="grp">DISPARO</div>
+      <div class="row"><span class="lbl">Magic Bullet</span>
+        <label class="sw"><input type="checkbox" data-k="magic"><i></i></label></div>
+      <div class="row"><span class="lbl">No Recoil</span>
+        <label class="sw"><input type="checkbox" data-k="norecoil" checked=""><i></i></label></div>
+      <div class="row"><span class="lbl">No Spread</span>
+        <label class="sw"><input type="checkbox" data-k="nospread"><i></i></label></div>
+      <div class="row"><span class="lbl">Fast Fire</span>
+        <label class="sw"><input type="checkbox" data-k="fastfire"><i></i></label></div>
+      <div class="row"><span class="lbl">Recarga Instantánea</span>
+        <label class="sw"><input type="checkbox" data-k="reload"><i></i></label></div>
+      <div class="row col"><div class="lblrow"><span class="lbl">Multiplicador Daño</span>
+        <span class="val" data-v="dmg">2</span></div>
+        <input type="range" min="1" max="10" value="2" data-k="dmg"></div>
+    </section>
+
+    <section id="visual">
+      <div class="grp">ESP</div>
+      <div class="row"><span class="lbl">ESP Maestro</span>
+        <label class="sw"><input type="checkbox" data-k="esp" checked=""><i></i></label></div>
+      <div class="row"><span class="lbl">Caja</span>
+        <label class="sw"><input type="checkbox" data-k="box" checked=""><i></i></label></div>
+      <div class="row"><span class="lbl">Línea</span>
+        <label class="sw"><input type="checkbox" data-k="line"><i></i></label></div>
+      <div class="row"><span class="lbl">Esqueleto</span>
+        <label class="sw"><input type="checkbox" data-k="skel"><i></i></label></div>
+      <div class="row"><span class="lbl">Nombre</span>
+        <label class="sw"><input type="checkbox" data-k="name" checked=""><i></i></label></div>
+      <div class="row"><span class="lbl">Barra de Vida</span>
+        <label class="sw"><input type="checkbox" data-k="hp" checked=""><i></i></label></div>
+      <div class="row"><span class="lbl">Distancia</span>
+        <label class="sw"><input type="checkbox" data-k="dist"><i></i></label></div>
+      <div class="row"><span class="lbl">Arma</span>
+        <label class="sw"><input type="checkbox" data-k="weapon"><i></i></label></div>
+      <div class="row"><span class="lbl">Marca de Cabeza</span>
+        <label class="sw"><input type="checkbox" data-k="head"><i></i></label></div>
+
+      <div class="grp">ENTORNO</div>
+      <div class="row"><span class="lbl">Radar</span>
+        <label class="sw"><input type="checkbox" data-k="radar"><i></i></label></div>
+      <div class="row"><span class="lbl">Círculo FOV</span>
+        <label class="sw"><input type="checkbox" data-k="fovcircle"><i></i></label></div>
+      <div class="row col"><div class="lblrow"><span class="lbl">Distancia Máx ESP</span>
+        <span class="val" data-v="maxdist">200</span></div>
+        <input type="range" min="50" max="500" value="200" data-k="maxdist"></div>
+    </section>
+
+    <section id="misc">
+      <div class="grp">MOVIMIENTO</div>
+      <div class="row"><span class="lbl">Antena</span>
+        <label class="sw"><input type="checkbox" data-k="antenna"><i></i></label></div>
+      <div class="row col"><div class="lblrow"><span class="lbl">Velocidad</span>
+        <span class="val" data-v="speed">1</span></div>
+        <input type="range" min="1" max="10" value="1" data-k="speed"></div>
+      <div class="row"><span class="lbl">Salto Elevado</span>
+        <label class="sw"><input type="checkbox" data-k="jump"><i></i></label></div>
+
+      <div class="grp">RENDIMIENTO</div>
+      <div class="row"><span class="lbl">Sin Niebla</span>
+        <label class="sw"><input type="checkbox" data-k="nofog"><i></i></label></div>
+      <div class="row"><span class="lbl">High FPS</span>
+        <label class="sw"><input type="checkbox" data-k="fps"><i></i></label></div>
+      <div class="row"><span class="lbl">Vista Dron</span>
+        <label class="sw"><input type="checkbox" data-k="drone"><i></i></label></div>
+
+      <div class="grp">SEGURIDAD</div>
+      <div class="row"><span class="lbl">Anti-Ban</span>
+        <label class="sw"><input type="checkbox" data-k="antiban" checked=""><i></i></label></div>
+      <div class="row"><span class="lbl">Modo Stream</span>
+        <label class="sw"><input type="checkbox" data-k="stream"><i></i></label></div>
+    </section>
+
+    <section id="config">
+      <div class="grp">PRESETS</div>
+      <div class="row2">
+        <button class="btn ghost" data-preset="legit">LEGIT</button>
+        <button class="btn ghost" data-preset="semi">SEMI</button>
+        <button class="btn ghost" data-preset="rage">RAGE</button>
+      </div>
+      <div class="grp">SINCRONIZAR</div>
+      <button class="btn" id="applyBtn">APLICAR CONFIG</button>
+      <div class="out" id="applyOut">—</div>
+      <div class="row2" style="margin-top:10px">
+        <button class="btn ghost" id="copyBtn">COPIAR</button>
+        <button class="btn ghost" id="importBtn">IMPORTAR</button>
+      </div>
+      <button class="btn ghost" id="resetBtn" style="margin-top:10px">RESTABLECER</button>
+      <div class="foot">BENITE · v1.0</div>
+    </section>
+
+    <section id="keys">
+      <div id="keysLocked">
+        <div class="grp">ACCESO ADMIN</div>
+        <p class="warn">Entra con la key maestra para generar y administrar keys.</p>
+        <input class="inp" id="admPw" placeholder="KEY MAESTRA" autocapitalize="characters" autocomplete="off" spellcheck="false">
+        <button class="btn" id="admGo">DESBLOQUEAR</button>
+        <div class="msg" id="admMsg"></div>
+      </div>
+
+      <div id="keysPanel" style="display:none">
+        <div class="grp">GENERAR KEYS</div>
+        <div class="row col">
+          <div class="lblrow"><span class="lbl">Duración</span></div>
+          <select id="plan">
+            <option value="1d">1 DÍA</option>
+            <option value="3d">3 DÍAS</option>
+            <option value="7d" selected="">7 DÍAS</option>
+            <option value="30d">30 DÍAS</option>
+            <option value="perm">PERMANENTE</option>
+          </select>
+        </div>
+        <div class="row col">
+          <div class="lblrow"><span class="lbl">Cantidad</span></div>
+          <input class="inp" id="qty" type="number" value="1" min="1" max="50">
+        </div>
+        <div class="row"><span class="lbl">Bloqueo por dispositivo</span>
+          <label class="sw"><input type="checkbox" id="lockSw" checked=""><i></i></label></div>
+        <button class="btn" id="genBtn">CREAR KEYS</button>
+
+        <div class="grp">MIS KEYS <span id="cnt" style="color:#444"></span></div>
+        <div id="keyList"></div>
+        <button class="btn ghost" id="wipeBtn">BORRAR TODAS</button>
+
+        <div class="grp">SEGURIDAD</div>
+        <input class="inp" id="newPw" placeholder="NUEVA KEY MAESTRA" autocapitalize="characters">
+        <button class="btn ghost" id="pwBtn">CAMBIAR</button>
+        <div class="foot">Dispositivo: <span id="dev"></span></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+
+
